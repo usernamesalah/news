@@ -18,9 +18,9 @@ import (
 	_ "github.com/lib/pq"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
-	"github.com/usernamesalah/news/producer/api/v1"
-	_ "github.com/usernamesalah/news/producer/api/v1/doc"
-	"github.com/usernamesalah/news/producer/pkg/services"
+	"github.com/usernamesalah/news/api/v1"
+	_ "github.com/usernamesalah/news/api/v1/doc"
+	"github.com/usernamesalah/news/pkg/services"
 )
 
 // @title News Api

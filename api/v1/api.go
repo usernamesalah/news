@@ -3,8 +3,7 @@ package api
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-
-	"github.com/usernamesalah/news/producer/pkg/service"
+	"github.com/usernamesalah/news/pkg/services"
 )
 
 // API can register a set of endpoints in a router and handle

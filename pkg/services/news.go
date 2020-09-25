@@ -3,10 +3,9 @@ package services
 import (
 	"context"
 	"fmt"
+	"newz/models"
 
 	"github.com/jmoiron/sqlx"
-
-	"github.com/usernamesalah/news/producer/pkg/model"
 )
 
 // NewsService service interface.

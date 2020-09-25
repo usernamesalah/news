@@ -6,8 +6,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-
-	"github.com/usernamesalah/news/producer/pkg/model"
+	"github.com/usernamesalah/news/pkg/models"
 )
 
 // List news

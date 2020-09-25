@@ -11,8 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/usernamesalah/news/producer/pkg/model"
-	"github.com/usernamesalah/news/producer/pkg/services/mock"
+	"github.com/usernamesalah/news/pkg/services/mock"
 )
 
 type mockRequestValidator struct{}
