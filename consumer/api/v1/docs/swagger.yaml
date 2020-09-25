@@ -1,0 +1,270 @@
+basePath: /api/v1
+definitions:
+  models.Player:
+    properties:
+      created_at:
+        example: "2020-04-21T00:00:00Z"
+        type: string
+      id:
+        type: integer
+      jersey_number:
+        type: string
+      name:
+        type: string
+      team_id:
+        type: integer
+      updated_at:
+        example: "2020-04-21T00:00:00Z"
+        type: string
+    type: object
+  models.Team:
+    properties:
+      created_at:
+        example: "2020-04-21T00:00:00Z"
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        example: "2020-04-21T00:00:00Z"
+        type: string
+    type: object
+info:
+  contact:
+    email: support@palembangdigital.org
+    name: Palembang Digital
+    url: https://palembangdigital.org
+  description: API documentation for palembangdigital.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Palembang Digital API
+  version: 1.0.0
+paths:
+  /players:
+    get:
+      description: Get the list of players
+      operationId: list-players
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Player'
+            type: array
+      summary: List players
+      tags:
+      - players
+    post:
+      description: Create a new player
+      operationId: create-player
+      parameters:
+      - description: Create player
+        in: body
+        name: player
+        required: true
+        schema:
+          $ref: '#/definitions/models.Player'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Player'
+      summary: Create a new player
+      tags:
+      - players
+  /players/{id}:
+    delete:
+      description: Delete an player by id
+      operationId: delete-player
+      parameters:
+      - description: Player ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Delete an player
+      tags:
+      - players
+    put:
+      description: Update an player
+      operationId: update-player
+      parameters:
+      - description: Player ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update player
+        in: body
+        name: player
+        required: true
+        schema:
+          $ref: '#/definitions/models.Player'
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: Update an player
+      tags:
+      - players
+  /players/{team_id}:
+    get:
+      description: Get the list of players by team
+      operationId: list-players-team
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Player'
+            type: array
+      summary: List players by team
+      tags:
+      - players
+  /players/{team_id}/detail/{id}:
+    get:
+      description: Get an player by id
+      operationId: get-player
+      parameters:
+      - description: Player ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Player'
+      summary: Get an player
+      tags:
+      - players
+  /teams:
+    get:
+      description: Get the list of teams
+      operationId: list-teams
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Team'
+            type: array
+      summary: List teams
+      tags:
+      - teams
+    post:
+      description: Create a new team
+      operationId: create-team
+      parameters:
+      - description: Create team
+        in: body
+        name: team
+        required: true
+        schema:
+          $ref: '#/definitions/models.Team'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Team'
+      summary: Create a new team
+      tags:
+      - teams
+  /teams/{id}:
+    delete:
+      description: Delete an team by id
+      operationId: delete-team
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Delete an team
+      tags:
+      - teams
+    get:
+      description: Get an team by id
+      operationId: get-team
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Team'
+      summary: Get an team
+      tags:
+      - teams
+    put:
+      description: Update an team
+      operationId: update-team
+      parameters:
+      - description: Team ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update team
+        in: body
+        name: team
+        required: true
+        schema:
+          $ref: '#/definitions/models.Team'
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: Update an team
+      tags:
+      - teams
+swagger: "2.0"

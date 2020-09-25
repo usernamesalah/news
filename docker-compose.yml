@@ -1,0 +1,72 @@
+version: "3"
+services:
+  # news:
+  #   build: .
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - PORT=8080
+  #     - DATABASE_URL=postgres://user:user@postgresql:5432/news?sslmode=disable
+  #   links:
+  #     - postgresql
+  postgresql:
+    image: bitnami/postgresql:12
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRESQL_DATABASE=news
+      - POSTGRESQL_USERNAME=user
+      - POSTGRESQL_PASSWORD=user
+  kafka:
+    image: confluentinc/cp-kafka:4.1.0
+    container_name: kafka
+    environment: 
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports: 
+      - 9092:9092
+    networks: 
+      - kafka
+  
+  zookeeper:
+    image: confluentinc/cp-zookeeper:4.1.0
+    container_name: zookeeper
+    environment: 
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks: 
+      - kafka
+      
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks: 
+      - kafka
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.6.1
+    container_name: kibana
+    environment:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    networks: 
+      - kafka
+      
+volumes:
+  esdata:
+    driver: local
+networks:
+  kafka:
