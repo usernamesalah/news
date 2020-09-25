@@ -3,7 +3,8 @@ package services
 import (
 	"context"
 	"fmt"
-	"newz/models"
+
+	"github.com/usernamesalah/news/pkg/models"
 
 	"github.com/jmoiron/sqlx"
 )

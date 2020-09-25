@@ -18,7 +18,7 @@ services:
       - POSTGRESQL_USERNAME=user
       - POSTGRESQL_PASSWORD=user
   kafka:
-    image: confluentinc/cp-kafka:4.1.0
+    image: confluent/kafka
     container_name: kafka
     environment: 
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -30,13 +30,13 @@ services:
       - kafka
   
   zookeeper:
-    image: confluentinc/cp-zookeeper:4.1.0
+    image: confluent/zookeeper
     container_name: zookeeper
     environment: 
       ZOOKEEPER_CLIENT_PORT: 2181
     networks: 
       - kafka
-      
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
     container_name: elasticsearch

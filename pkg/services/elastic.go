@@ -3,7 +3,8 @@ package services
 import (
 	"context"
 	"encoding/json"
-	"newz/models"
+
+	"github.com/usernamesalah/news/pkg/models"
 
 	"github.com/olivere/elastic"
 )

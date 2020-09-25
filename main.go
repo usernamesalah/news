@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -19,7 +18,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"github.com/usernamesalah/news/api/v1"
-	_ "github.com/usernamesalah/news/api/v1/doc"
+	_ "github.com/usernamesalah/news/api/v1/docs"
 	"github.com/usernamesalah/news/pkg/services"
 )
 
@@ -57,11 +56,9 @@ func main() {
 
 	log.Println("Initializing the kafka connection ...")
 	kafkaProducer, err := KafkaInit(cfg)
-	defer func() {
-		if err := kafkaProducer.Close(); err != nil {
-			return
-		}
-	}()
+	if err != nil {
+		panic(err)
+	}
 
 	log.Println("Initializing services ...")
 	newsService := services.NewNewsService(db)
@@ -70,7 +67,7 @@ func main() {
 	log.Println("Initializing the web server ...")
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
-	e.Use(middleware.Recover())
+	// e.Use(middleware.Recover())
 
 	e.Validator = &requestValidator{}
 
@@ -107,12 +104,13 @@ func ping(c echo.Context) error {
 }
 
 // KafkaInit for starting Kafka Producer
-func KafkaInit(cfg Config) (sarama.SyncProducer, error) {
+func KafkaInit(cfg Config) (sarama.AsyncProducer, error) {
 
 	kafkaConfig := sarama.NewConfig()
 	kafkaConfig.Producer.Return.Successes = true
 	kafkaConfig.Net.WriteTimeout = 5 * time.Second
 	kafkaConfig.Producer.Retry.Max = 0
+	kafkaConfig.Producer.RequiredAcks = sarama.WaitForAll
 
 	if cfg.Kafka.User != "" {
 		kafkaConfig.Net.SASL.Enable = true
@@ -120,7 +118,12 @@ func KafkaInit(cfg Config) (sarama.SyncProducer, error) {
 		kafkaConfig.Net.SASL.Password = cfg.Kafka.Password
 	}
 
-	kafkaProducer, err := sarama.NewSyncProducer([]string{fmt.Sprintf("%s:%s", cfg.Kafka.Host, cfg.Kafka.Port)}, kafkaConfig)
+	// host := strings.Join([]string{cfg.Kafka.Host, cfg.Kafka.Port}, ":")
+	// kafkaProducer, err := sarama.NewSyncProducer([]string{"kafka:9092"}, kafkaConfig)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	kafkaProducer, err := sarama.NewAsyncProducer([]string{"192.168.43.213:9092"}, kafkaConfig)
 	if err != nil {
 		return nil, err
 	}
