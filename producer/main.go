@@ -23,13 +23,9 @@ import (
 	"github.com/usernamesalah/news/producer/pkg/services"
 )
 
-// @title Palembang Digital API
+// @title News Api
 // @version 1.0.0
-// @description API documentation for palembangdigital.org
-
-// @contact.name Palembang Digital
-// @contact.url https://palembangdigital.org
-// @contact.email support@palembangdigital.org
+// @description API documentation for News Api
 
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
