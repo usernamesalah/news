@@ -24,3 +24,8 @@ gen-swagger:
 	@echo "Updating API documentation..."
 	@rm -rf ${API_DOCS_PATH}
 	@swag init -o ${API_DOCS_PATH}
+
+push:
+	@git add .
+	@git commit -m "update"
+	@git push origin master

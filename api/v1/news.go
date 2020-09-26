@@ -15,12 +15,17 @@ import (
 // @Tags news
 // @ID list-news
 // @Produce json
+// @Param page query integer false "page number" default(1)
+// @Param rows query integer false "rows" default(10)
 // @Success 200 {array} models.News
 // @Router /news [get]
 func (api *API) listNews(c echo.Context) error {
-	ctx := c.Request().Context()
 
-	news, err := api.newsService.ListNews(ctx)
+	ctx := c.Request().Context()
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	rows, _ := strconv.Atoi(c.QueryParam("rows"))
+
+	news, err := api.elasticService.Get(ctx, rows, page)
 	if err != nil {
 		return err
 	}

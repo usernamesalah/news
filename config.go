@@ -12,6 +12,7 @@ type Config struct {
 
 	Database DatabaseConfig
 	Kafka    KafkaConfig
+	Elastic  ElasticConfig
 }
 
 // DatabaseConfig stores database configurations.
@@ -27,6 +28,15 @@ type KafkaConfig struct {
 	Port     string `envconfig:"KAFKA_PORT" default:"9092" required:"true"`
 	User     string `envconfig:"KAFKA_USER"`
 	Password string `envconfig:"KAFKA_PASSWORD"`
+}
+
+//ElasticConfig stores elastic configurations.
+type ElasticConfig struct {
+	Host     string `envconfig:"ELASTIC_HOST" default:"elastic" required:"true"`
+	Port     string `envconfig:"ELASTIC_PORT" default:"9200" required:"true"`
+	Username string `envconfig:"ELASTIC_USERNAME"`
+	Password string `envconfig:"ELASTIC_PASSWORD"`
+	Index    string `envconfig:"ELASTIC_INDEX"`
 }
 
 // ReadConfig populates configurations from environment variables.

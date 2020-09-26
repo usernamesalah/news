@@ -2,8 +2,10 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/Shopify/sarama"
@@ -15,6 +17,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	_ "github.com/lib/pq"
+	"github.com/olivere/elastic"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"github.com/usernamesalah/news/api/v1"
@@ -32,6 +35,7 @@ import (
 // @BasePath /api/v1
 
 func main() {
+
 	log.Println("Reading the configuration from environment variables ...")
 	cfg, err := ReadConfig()
 	if err != nil {
@@ -60,14 +64,28 @@ func main() {
 		panic(err)
 	}
 
+	log.Println("Initializing the elasticsearch connection ...")
+	elasticClient, err := elastic.NewClient(
+		elastic.SetURL(
+			fmt.Sprintf("http://%s:%s", cfg.Elastic.Host, cfg.Elastic.Port),
+		),
+		elastic.SetBasicAuth(cfg.Elastic.Username, cfg.Elastic.Password),
+		elastic.SetSniff(false),
+		elastic.SetHealthcheck(false),
+	)
+	if err != nil {
+		panic(err)
+	}
+
 	log.Println("Initializing services ...")
 	newsService := services.NewNewsService(db)
 	kafkaService := services.NewKafkaService(kafkaProducer)
+	elasticService := services.NewElasticService(elasticClient, cfg.Elastic.Index)
 
 	log.Println("Initializing the web server ...")
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
-	// e.Use(middleware.Recover())
+	e.Use(middleware.Recover())
 
 	e.Validator = &requestValidator{}
 
@@ -78,7 +96,7 @@ func main() {
 	e.GET("/ping", ping)
 
 	// Serve API
-	api := api.NewAPI(newsService, kafkaService, cfg.AdminUsername, cfg.AdminPassword)
+	api := api.NewAPI(newsService, kafkaService, elasticService, cfg.AdminUsername, cfg.AdminPassword)
 	api.Register(e.Group("/api/v1", middleware.Logger()))
 
 	// Start server
@@ -118,12 +136,9 @@ func KafkaInit(cfg Config) (sarama.AsyncProducer, error) {
 		kafkaConfig.Net.SASL.Password = cfg.Kafka.Password
 	}
 
-	// host := strings.Join([]string{cfg.Kafka.Host, cfg.Kafka.Port}, ":")
-	// kafkaProducer, err := sarama.NewSyncProducer([]string{"kafka:9092"}, kafkaConfig)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	kafkaProducer, err := sarama.NewAsyncProducer([]string{"192.168.43.213:9092"}, kafkaConfig)
+	host := strings.Join([]string{cfg.Kafka.Host, cfg.Kafka.Port}, ":")
+
+	kafkaProducer, err := sarama.NewAsyncProducer([]string{host}, kafkaConfig)
 	if err != nil {
 		return nil, err
 	}

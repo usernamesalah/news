@@ -9,18 +9,20 @@ import (
 // API can register a set of endpoints in a router and handle
 // them using the provided storage.
 type API struct {
-	newsService  services.NewsService
-	kafkaService services.KafkaService
+	newsService    services.NewsService
+	kafkaService   services.KafkaService
+	elasticService services.ElasticService
 
 	adminUsername string
 	adminPassword string
 }
 
 // NewAPI returns an initialized API type.
-func NewAPI(newsService services.NewsService, kafkaService services.KafkaService, adminUsername, adminPassword string) *API {
+func NewAPI(newsService services.NewsService, kafkaService services.KafkaService, elasticService services.ElasticService, adminUsername, adminPassword string) *API {
 	return &API{
-		newsService:  newsService,
-		kafkaService: kafkaService,
+		newsService:    newsService,
+		kafkaService:   kafkaService,
+		elasticService: elasticService,
 
 		adminUsername: adminUsername,
 		adminPassword: adminPassword,

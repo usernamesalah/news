@@ -23,17 +23,6 @@ func NewKafkaService(Producer sarama.AsyncProducer) KafkaService {
 
 // SendMessage function to send message into kafka
 func (p *kafkaProducer) SendMessage(topic, msg string) error {
-
-	// kafkaMsg := &sarama.ProducerMessage{
-	// 	Topic: topic,
-	// 	Value: sarama.StringEncoder(msg),
-	// }
-
-	// partition, offset, err := p.Producer.SendMessage(kafkaMsg)
-	// if err != nil {
-	// 	return err
-	// }
-
 	kafkaMsg := &sarama.ProducerMessage{
 		Topic: topic,
 		Value: sarama.StringEncoder(msg),
@@ -44,6 +33,7 @@ func (p *kafkaProducer) SendMessage(topic, msg string) error {
 		log.Printf("Produced topic : %s", topic)
 	case err := <-p.Producer.Errors():
 		log.Printf("Fail producing topic : %s error : %v", topic, err)
+		return err
 	}
 
 	return nil
