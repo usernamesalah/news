@@ -17,6 +17,7 @@ services:
       - POSTGRESQL_DATABASE=news
       - POSTGRESQL_USERNAME=user
       - POSTGRESQL_PASSWORD=user
+      
   kafka:
     image: confluent/kafka
     container_name: kafka

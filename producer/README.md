@@ -1,4 +1,4 @@
-# NEWS API DOCUMENTATION 
+# Kafka Producer for News API DOCUMENTATION 
 
 This repository contains source code for NEWS API.
 
@@ -18,13 +18,38 @@ To run the project localy, make sure minimum requirements are fulfilled.
     ```bash
     // clone the repository
     > git clone git@github.com:usernamesalah/news.git
-    ```
 
+    // change directory to root project folder
+    > cd producer
+    
+    // install all the dependencies
+    > make init   
+    ```
+3. Running your PostgreSQL
+4. While still in root project build and run the app
+    ```bash
+    // build project
+    > make build
+
+    // source env
+    > source .env.development
+    
+    // run project
+    > ./bin/producer
+
+    // now go to http://localhost:8080/ in your browser to check the app.
+    ```
+5. If u wanna Run Unit Testing just run
+    ```bash
+        make test
+    ```
 ### Running from Docker Container
 
 1. Make sure Docker and Docker Compose is installed
 
-2. Run `docker-compose up` While still in root project for Running Kafka , PostgreSQL , zookeper and Elastic Search with docker
+2. Run `docker-compose up`
+
+3. Build and run the app as described on the previous section.
 
 ## API Documentation
 
