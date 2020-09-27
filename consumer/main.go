@@ -84,7 +84,7 @@ func main() {
 	kafkaConsumer := consumer.NewConsumer(newsService, elasticService, kafka)
 
 	signals := make(chan os.Signal, 1)
-	kafkaConsumer.Consume([]string{"test_topic"}, signals)
+	kafkaConsumer.Consume([]string{cfg.Kafka.Topic}, signals)
 }
 
 // KafkaInit for starting Kafka Consumer

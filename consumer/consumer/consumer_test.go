@@ -19,17 +19,17 @@ func TestConsume(t *testing.T) {
 	}()
 
 	consumers.SetTopicMetadata(map[string][]int32{
-		"test_topic": {0},
+		"news": {0},
 	})
 
 	kafka := &consumer.KafkaConsumer{
 		Consumer: consumers,
 	}
 
-	consumers.ExpectConsumePartition("test_topic", 0, sarama.OffsetNewest).YieldMessage(&sarama.ConsumerMessage{Value: []byte("hello world")})
+	consumers.ExpectConsumePartition("news", 0, sarama.OffsetNewest).YieldMessage(&sarama.ConsumerMessage{Value: []byte("hello world")})
 
 	signals := make(chan os.Signal, 1)
-	go kafka.Consume([]string{"test_topic"}, signals)
+	go kafka.Consume([]string{"news"}, signals)
 	timeout := time.After(2 * time.Second)
 	for {
 		select {
